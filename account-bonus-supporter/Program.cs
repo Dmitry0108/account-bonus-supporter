@@ -1,6 +1,20 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
+var login = Environment.GetEnvironmentVariable("login");
+if (string.IsNullOrEmpty(login))
+{
+    Console.WriteLine("Login is empty");
+    return;
+}
+var pass = Environment.GetEnvironmentVariable("password");
+if (string.IsNullOrEmpty(pass))
+{
+    Console.WriteLine("Password is empty");
+    return;
+}
+
+
 // Initialize ChromeDriver
 IWebDriver driver = new ChromeDriver();
 
@@ -14,8 +28,8 @@ try
     IWebElement passwordField = driver.FindElement(By.Name("password"));
     IWebElement loginButton = driver.FindElement(By.ClassName("btn-primary"));
 
-    usernameField.SendKeys("nsr5k1kv19");
-    passwordField.SendKeys("555");
+    usernameField.SendKeys(login);
+    passwordField.SendKeys(pass);
     loginButton.Click();
 
     // Wait for login to complete
