@@ -1,21 +1,33 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Remote;
 
-var login = Environment.GetEnvironmentVariable("login");
+var login = Environment.GetEnvironmentVariable("LOGIN");
 if (string.IsNullOrEmpty(login))
 {
     Console.WriteLine("Login is empty");
     return;
 }
-var pass = Environment.GetEnvironmentVariable("password");
+var pass = Environment.GetEnvironmentVariable("PASSWORD");
 if (string.IsNullOrEmpty(pass))
 {
     Console.WriteLine("Password is empty");
     return;
 }
+var webBrowserUrl = Environment.GetEnvironmentVariable("PASSWORD");
+if (string.IsNullOrEmpty(webBrowserUrl))
+{
+    Console.WriteLine("Browser url is empty");
+    return;
+}
 
-// Initialize ChromeDriver
-IWebDriver driver = new ChromeDriver(AppContext.BaseDirectory);
+// URL of the Chrome Docker container
+var chromeOptions = new ChromeOptions();
+chromeOptions.AddArgument("--no-sandbox");
+chromeOptions.AddArgument("--disable-dev-shm-usage");
+
+// Connect to the remote Chrome instance
+var driver = new RemoteWebDriver(new Uri($"{webBrowserUrl}/wd/hub"), chromeOptions.ToCapabilities());
 
 try
 {
