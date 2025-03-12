@@ -65,5 +65,5 @@ jobs:
         with:
           context: .
           tags: |
-            ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ github.ref_name }}  # Use the tag name (e.g., v1.0.0)
+            ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.REPO_NAME }}:${{ github.ref_name }}
           push: true
