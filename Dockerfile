@@ -3,13 +3,14 @@
 # Этот этап используется при запуске из VS в быстром режиме (по умолчанию для конфигурации отладки)
 FROM mcr.microsoft.com/dotnet/runtime:9.0 AS base
 
-# Create a custom user
-RUN useradd -u $APP_UID -m appuser
+# Create a user and group with the specified PUID and PGID
+ARG PUID=1000
+ARG PGID=1000
 
-# Perform setup as root
-RUN mkdir -p /app && chown appuser:appuser /app
+RUN groupadd -g $PGID appgroup && \
+    useradd -u $PUID -g $PGID -m appuser
 
-# Switch to the custom user
+# Switch to the new user
 USER appuser
 
 # Your application setup and commands
