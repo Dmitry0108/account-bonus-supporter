@@ -16,7 +16,7 @@ USER appuser
 # Your application setup and commands
 WORKDIR /app
 
-RUN chown -R 777 /app
+RUN chmod -R 777 /app
 
 # Этот этап используется для сборки проекта службы
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
