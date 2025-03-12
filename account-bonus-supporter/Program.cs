@@ -19,7 +19,7 @@ try
     loginButton.Click();
 
     // Wait for login to complete
-    Thread.Sleep(2000); // Replace with explicit wait for better reliability
+    Thread.Sleep(3000); // Replace with explicit wait for better reliability
 
     // Step 3: Navigate to another page
     driver.Navigate().GoToUrl("https://lk.ons24.ru/bonus");
