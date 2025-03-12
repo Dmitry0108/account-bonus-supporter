@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "account-bonus-supporter": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
