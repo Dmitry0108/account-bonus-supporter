@@ -14,7 +14,7 @@ if (string.IsNullOrEmpty(pass))
     Console.WriteLine("Password is empty");
     return;
 }
-var webBrowserUrl = Environment.GetEnvironmentVariable("PASSWORD");
+var webBrowserUrl = Environment.GetEnvironmentVariable("WEB_BROWSER_URL");
 if (string.IsNullOrEmpty(webBrowserUrl))
 {
     Console.WriteLine("Browser url is empty");
