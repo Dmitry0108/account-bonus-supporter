@@ -18,7 +18,7 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0  # Replace with your .NET Core version
+          dotnet-version: 9.0  # Replace with your .NET Core version
 
       - name: Restore dependencies
         run: dotnet restore
