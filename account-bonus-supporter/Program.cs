@@ -14,9 +14,8 @@ if (string.IsNullOrEmpty(pass))
     return;
 }
 
-
 // Initialize ChromeDriver
-IWebDriver driver = new ChromeDriver();
+IWebDriver driver = new ChromeDriver(AppContext.BaseDirectory);
 
 try
 {
