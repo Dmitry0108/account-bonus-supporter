@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
+using System.Text;
 
 var login = Environment.GetEnvironmentVariable("LOGIN");
 if (string.IsNullOrEmpty(login))
@@ -20,6 +21,8 @@ if (string.IsNullOrEmpty(webBrowserUrl))
     Console.WriteLine("Browser url is empty");
     return;
 }
+
+var ntfyTopic = Environment.GetEnvironmentVariable("NTFY_TOPIC");
 
 // URL of the Chrome Docker container
 var chromeOptions = new ChromeOptions();
@@ -53,13 +56,27 @@ try
     supportBonusAccountButton.Click();
 
     Console.WriteLine("Successfully supported!!");
+
+    if (!string.IsNullOrEmpty(ntfyTopic))
+        await SendNtfyNotificationAsync(ntfyTopic, "Successfully supported bonus account!");
 }
 catch (Exception ex)
 {
     Console.WriteLine("An error occurred: " + ex.Message);
+    if (!string.IsNullOrEmpty(ntfyTopic))
+        await SendNtfyNotificationAsync(ntfyTopic, $"Error: {ex.Message}");
 }
 finally
 {
     // Close the browser
     driver.Quit();
+}
+
+// Helper method to send ntfy notification
+async Task SendNtfyNotificationAsync(string topic, string message)
+{
+    using var client = new HttpClient();
+    var url = $"https://ntfy.vah-home.ru/{topic}";
+    var content = new StringContent(message, Encoding.UTF8, "text/plain");
+    await client.PostAsync(url, content);
 }
