@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Support.UI;
 using System.Text;
 
 var login = Environment.GetEnvironmentVariable("LOGIN");
@@ -55,10 +56,14 @@ try
     IWebElement supportBonusAccountButton = driver.FindElement(By.ClassName("btn-subtle-success"));
     supportBonusAccountButton.Click();
 
+    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+    IWebElement bonusValue = wait.Until(d =>
+        d.FindElement(By.XPath("//*[contains(text(), 'Ваш бонусный счёт:')]/following::*[contains(@class, 'text-success-dark')][1]")));
+
     Console.WriteLine("Successfully supported!!");
 
     if (!string.IsNullOrEmpty(ntfyTopic))
-        await SendNtfyNotificationAsync(ntfyTopic, "Successfully supported bonus account!");
+        await SendNtfyNotificationAsync(ntfyTopic, $"Successfully supported bonus account! Bonus value: {bonusValue}");
 }
 catch (Exception ex)
 {
