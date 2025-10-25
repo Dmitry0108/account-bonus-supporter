@@ -1,7 +1,14 @@
 {
   "profiles": {
     "account-bonus-supporter": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "environmentVariables": {
+        "LOGIN": "nsr5k1kv19",
+        "PASSWORD": "pass4Ons",
+        "WEB_BROWSER_URL": "http://192.168.1.75:4444",
+        "NTFY_TOPIC": "ons_update_monitor",
+        "BASE_URL": "https://lk.ons24.ru"
+      }
     },
     "Container (Dockerfile)": {
       "commandName": "Docker"
