@@ -83,7 +83,7 @@ public class BonusSupporter : IAsyncDisposable
         Console.WriteLine($"Current bonus balance: {bonusValue} ₽");
         if (!string.IsNullOrEmpty(_ntfyTopic))
         {
-            await SendNtfyNotificationAsync($"Bonus account value: {bonusValue} ₽");
+            await SendNtfyNotificationAsync($"Bonus account updated! Current value: {bonusValue} ₽");
         }
     }
 
