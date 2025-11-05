@@ -37,15 +37,49 @@ public class BonusSupporter : IAsyncDisposable
         return bonusValue;
     }
 
+    private decimal GetPersonalAccountBalance()
+    {
+        var balanceElement = _wait.Until(d =>
+            d.FindElement(By.Id("balanceCountUp")));
+
+        var balanceText = balanceElement.Text.Trim();
+        // Remove the ruble symbol and any extra whitespace, then parse to decimal
+        var balanceValue = decimal.Parse(balanceText.Split(' ')[0], System.Globalization.CultureInfo.InvariantCulture);
+        return balanceValue;
+    }
+
+    // Modify NotifySuccessAsync to handle both values
+    private async Task NotifySuccessAsync(decimal initialValue, decimal finalValue, decimal personalBalance)
+    {
+        var message = $"Bonus balance: {initialValue:F2} ₽ → {finalValue:F2} ₽\n" +
+                     $"Personal account balance: {personalBalance:F2} ₽";
+        Console.WriteLine(message);
+        if (!string.IsNullOrEmpty(_ntfyTopic))
+        {
+            await SendNtfyNotificationAsync(message);
+        }
+    }
+
     public async Task ExecuteAsync(string login, string password)
     {
         try
         {
             await LoginAsync(login, password);
             await _driver.Navigate().GoToUrlAsync($"{_baseUrl}/bonus");
+            
+            // Get initial bonus value
+            var initialBonusValue = GetBonusAccountValue();
+            
+            // Perform support action
             await SupportBonusAccountAsync();
-            var bonusValue = GetBonusAccountValue();
-            await NotifySuccessAsync($"{bonusValue:F2}");
+            
+            // Wait for page reload and get new values
+            _wait.Until(d => d.FindElement(By.XPath("//p[contains(text(), 'Ваш бонусный счёт:')]//span[@class='text-success-dark']")).Displayed);
+            var finalBonusValue = GetBonusAccountValue();
+            var personalBalance = GetPersonalAccountBalance();
+            
+            // Notify with all values
+            await NotifySuccessAsync(initialBonusValue, finalBonusValue, personalBalance);
         }
         catch (Exception ex)
         {
@@ -76,15 +110,6 @@ public class BonusSupporter : IAsyncDisposable
 
         var supportButton = _wait.Until(d => d.FindElement(By.ClassName("btn-subtle-success")));
         supportButton.Click();
-    }
-
-    private async Task NotifySuccessAsync(string bonusValue)
-    {
-        Console.WriteLine($"Current bonus balance: {bonusValue} ₽");
-        if (!string.IsNullOrEmpty(_ntfyTopic))
-        {
-            await SendNtfyNotificationAsync($"Bonus account value: {bonusValue} ₽");
-        }
     }
 
     private async Task HandleErrorAsync(Exception ex)
