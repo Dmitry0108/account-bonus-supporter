@@ -112,6 +112,15 @@ public class BonusSupporter : IAsyncDisposable
         supportButton.Click();
     }
 
+    private async Task NotifySuccessAsync(string bonusValue)
+    {
+        Console.WriteLine($"Current bonus balance: {bonusValue} ₽");
+        if (!string.IsNullOrEmpty(_ntfyTopic))
+        {
+            await SendNtfyNotificationAsync($"Bonus account value: {bonusValue} ₽");
+        }
+    }
+
     private async Task HandleErrorAsync(Exception ex)
     {
         Console.WriteLine($"An error occurred: {ex.Message}");
