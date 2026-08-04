@@ -1,4 +1,6 @@
-﻿var login = Environment.GetEnvironmentVariable("LOGIN");
+﻿using Microsoft.Extensions.Logging;
+
+var login = Environment.GetEnvironmentVariable("LOGIN");
 var pass = Environment.GetEnvironmentVariable("PASSWORD");
 var webBrowserUrl = Environment.GetEnvironmentVariable("WEB_BROWSER_URL");
 var ntfyTopic = Environment.GetEnvironmentVariable("NTFY_TOPIC");
@@ -13,5 +15,17 @@ if (string.IsNullOrEmpty(webBrowserUrl))
 if (string.IsNullOrEmpty(baseUrl))
     throw new ArgumentException("Base url is empty");
 
-await using var supporter = new BonusSupporter(webBrowserUrl, baseUrl, ntfyTopic);
+// Setup logging
+using var loggerFactory = LoggerFactory.Create(builder =>
+{
+    builder.AddConsole();
+    builder.SetMinimumLevel(LogLevel.Information);
+});
+
+var logger = loggerFactory.CreateLogger<Program>();
+logger.LogInformation("Starting BonusSupporter application");
+
+await using var supporter = new BonusSupporter(webBrowserUrl, baseUrl, ntfyTopic, loggerFactory.CreateLogger<BonusSupporter>());
 await supporter.ExecuteAsync(login, pass);
+
+logger.LogInformation("Application completed successfully");
